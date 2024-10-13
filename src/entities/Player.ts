@@ -34,10 +34,17 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
     }
   }
 
+  playRunAnimation(){
+    this.play('dino-run', true)
+  }
+
   registerAnimations(){
     this.anims.create({
       key: "dino-run",
-      frames: this.anims.generateFrameNames('dino-run'),
+      frames: this.anims.generateFrameNames('dino-run', {
+        start: 2,
+        end: 3,
+      }),
       frameRate: 10,
       repeat: -1,
     })
