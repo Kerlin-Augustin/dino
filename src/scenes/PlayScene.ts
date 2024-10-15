@@ -49,6 +49,14 @@ class PlayScene extends GameScene {
       })
   }
 
+  update(time: number, delta: number): void {
+    this.spawnTime += delta
+    if(this.spawnTime >= this.spawnInterval){
+      this.spawnObstacle();
+      this.spawnTime = 0
+    }
+  }
+
   createEnvironment() {
 
     this.ground = this.add
@@ -60,12 +68,10 @@ class PlayScene extends GameScene {
     this.player = new Player(this, 0, this.gameHeight) 
   }
 
-  update(time: number, delta: number): void {
-    this.spawnTime += delta
-    if(this.spawnTime > this.spawnInterval){
-      this.spawnTime = 0
-    }
+  spawnObstacle(){
+    
   }
+
 }
 
 export default PlayScene;
