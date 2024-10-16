@@ -36,7 +36,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
       this.setVelocityY(-1600)
     }
 
-    if(this.scene.isGameRunning){
+    if(!this.scene.isGameRunning){
       return;
     }
     
@@ -62,6 +62,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
       frameRate: 10,
       repeat: -1,
     })
+  }
+
+  die(){
+    this.anims.pause();
+    this.setTexture('dino-hurt');
   }
 
 }
