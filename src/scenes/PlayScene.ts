@@ -7,7 +7,9 @@ class PlayScene extends GameScene {
 
   player: Player;
   ground: Phaser.GameObjects.TileSprite;
+  obstacles: Phaser.Physics.Arcade.Group;
   startTrigger: SpriteWithDynamicBody;
+
   spawnInterval: number = 1500;
   spawnTime: number = 0;
 
@@ -18,6 +20,9 @@ class PlayScene extends GameScene {
   create() {
     this.createEnvironment();
     this.createPlayer();
+
+    this.obstacles = this.physics.add.group()
+
     this.startTrigger = this.physics.add.sprite(0, 10, null)
       .setAlpha(0)
       .setOrigin(0, 1);
@@ -69,7 +74,13 @@ class PlayScene extends GameScene {
   }
 
   spawnObstacle(){
-    
+    const obstacleNum = Math.floor(Math.random() * 6) + 1
+    const distance = Phaser.Math.Between(600, 900)
+
+    this.obstacles
+      .create(distance, this.gameHeight, `obstacle-${obstacleNum}`)
+      .setOrigin(0,1)
+
   }
 
 }
