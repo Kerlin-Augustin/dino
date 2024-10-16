@@ -13,7 +13,7 @@ class PlayScene extends GameScene {
 
   spawnInterval: number = 1500;
   spawnTime: number = 0;
-  gameSpeed: number = 5
+  gameSpeed: number = 9
 
   constructor() {
     super('PlayScene')
@@ -29,45 +29,50 @@ class PlayScene extends GameScene {
       .setAlpha(0)
       .setOrigin(0, 1);
 
-      this.physics.add.overlap(this.startTrigger, this.player, () => {
-        if(this.startTrigger.y === 10){
-          this.startTrigger.body.reset(0, this.gameHeight)
-          return
-        }
+    this.physics.add.collider(this.obstacles, this.player, () => {
+      this.physics.pause()
+      this.isGameRunning = false
+    })
 
-        this.startTrigger.body.reset(9999,9999)
+    this.physics.add.overlap(this.startTrigger, this.player, () => {
+      if (this.startTrigger.y === 10) {
+        this.startTrigger.body.reset(0, this.gameHeight)
+        return
+      }
 
-        const rollOutEvent = this.time.addEvent({
-          delay: 1000/ 60,
-          loop: true,
-          callback: () => {
-            this.player.playRunAnimation()
-            this.player.setVelocityX(100)
-            this.ground.width += (17 * 2)
+      this.startTrigger.body.reset(9999, 9999)
 
-            if(this.ground.width >= this.gameWidth) {
-              rollOutEvent.remove()
-              this.ground.width = this.gameWidth
-              this.player.setVelocityX(0)
-              this.isGameRunning = true;
-            }
+      const rollOutEvent = this.time.addEvent({
+        delay: 1000 / 60,
+        loop: true,
+        callback: () => {
+          this.player.playRunAnimation()
+          this.player.setVelocityX(100)
+          this.ground.width += (17 * 2)
+
+          if (this.ground.width >= this.gameWidth) {
+            rollOutEvent.remove()
+            this.ground.width = this.gameWidth
+            this.player.setVelocityX(0)
+            this.isGameRunning = true;
           }
-        })
+        }
       })
+    })
   }
 
   update(time: number, delta: number): void {
-    if(!this.isGameRunning) return
+    if (!this.isGameRunning) return
 
     this.spawnTime += delta
-    if(this.spawnTime >= this.spawnInterval){
+    if (this.spawnTime >= this.spawnInterval) {
       this.spawnObstacle();
       this.spawnTime = 0
     }
 
     Phaser.Actions.IncX(this.obstacles.getChildren(), -this.gameSpeed)
     this.obstacles.getChildren().forEach((obstacle: SpriteWithDynamicBody) => {
-      if(obstacle.getBounds().right < 0){
+      if (obstacle.getBounds().right < 0) {
         this.obstacles.remove(obstacle)
       }
     })
@@ -83,17 +88,17 @@ class PlayScene extends GameScene {
   }
 
   createPlayer() {
-    this.player = new Player(this, 0, this.gameHeight) 
+    this.player = new Player(this, 0, this.gameHeight)
   }
 
-  spawnObstacle(){
+  spawnObstacle() {
     const obstacleNum = Math.floor(Math.random() * PRELOAD_CONFIG.cactusesCount) + 1
     const distance = Phaser.Math.Between(600, 900)
 
-    this.obstacles
+    const obstacle = this.obstacles
       .create(distance, this.gameHeight, `obstacle-${obstacleNum}`)
-      .setOrigin(0,1)
-
+      .setOrigin(0, 1)
+      .setImmovable();
   }
 
 }
