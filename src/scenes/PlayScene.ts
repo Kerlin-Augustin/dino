@@ -9,6 +9,7 @@ class PlayScene extends GameScene {
   player: Player;
   ground: Phaser.GameObjects.TileSprite;
   obstacles: Phaser.Physics.Arcade.Group;
+  clouds: Phaser.GameObjects.Group;
   startTrigger: SpriteWithDynamicBody;
 
   gameOverContainer: Phaser.GameObjects.Container;
@@ -45,9 +46,17 @@ class PlayScene extends GameScene {
     }
 
     Phaser.Actions.IncX(this.obstacles.getChildren(), -this.gameSpeed)
+    Phaser.Actions.IncX(this.clouds.getChildren(), -0.5)
+
     this.obstacles.getChildren().forEach((obstacle: SpriteWithDynamicBody) => {
       if (obstacle.getBounds().right < 0) {
         this.obstacles.remove(obstacle)
+      }
+    })
+
+    this.obstacles.getChildren().forEach((cloud: SpriteWithDynamicBody) => {
+      if (cloud.getBounds().right < 0) {
+        cloud.x = this.gameWidth + 30
       }
     })
 
@@ -59,6 +68,15 @@ class PlayScene extends GameScene {
     this.ground = this.add
       .tileSprite(0, this.gameHeight, 90, 26, 'ground')
       .setOrigin(0, 1);
+
+    this.clouds = this.add.group();
+    this.clouds = this.clouds.addMultiple([
+      this.add.image(this.gameWidth / 2, 170, 'cloud'),
+      this.add.image(this.gameWidth - 80, 80, 'cloud'),
+      this.add.image(this.gameWidth / 1.3, 100, 'cloud')
+    ])
+
+    this.clouds.setAlpha(0);
   }
 
   createPlayer() {
@@ -135,6 +153,7 @@ class PlayScene extends GameScene {
             rollOutEvent.remove()
             this.ground.width = this.gameWidth
             this.player.setVelocityX(0)
+            this.clouds.setAlpha(1)
             this.isGameRunning = true;
           }
         }
