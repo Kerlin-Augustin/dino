@@ -51,6 +51,10 @@ class PlayScene extends GameScene {
     if(this.scoreDeltaTime >= this.scoreInterval){
       this.score++
       this.scoreDeltaTime = 0
+
+      if(this.score % 100 === 0){
+        this.gameSpeedModifier += 0.2
+      }
     }
 
     if (this.spawnTime >= this.spawnInterval) {
@@ -219,7 +223,7 @@ class PlayScene extends GameScene {
       this.spawnTime = 0
       this.score = 0
       this.scoreDeltaTime = 0
-      this.gameSpeed = 9
+      this.gameSpeedModifier = 1
     })
   }
 }
