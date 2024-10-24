@@ -17,9 +17,13 @@ class PlayScene extends GameScene {
   gameOverText: Phaser.GameObjects.Image;
   restartText: Phaser.GameObjects.Image;
 
+  score: number = 0;
+  scoreInterval: number = 100;
+  scoreDeltaTime: number = 0;
   spawnInterval: number = 1500;
   spawnTime: number = 0;
-  gameSpeed: number = 9
+  gameSpeed: number = 9;
+  gameSpeedModifier: number = 1;
 
   constructor() {
     super('PlayScene')
@@ -42,13 +46,28 @@ class PlayScene extends GameScene {
     if (!this.isGameRunning) return
 
     this.spawnTime += delta
+    this.scoreDeltaTime += delta
+
+    if(this.scoreDeltaTime >= this.scoreInterval){
+      this.score++
+      this.scoreDeltaTime = 0
+    }
+
     if (this.spawnTime >= this.spawnInterval) {
       this.spawnObstacle();
       this.spawnTime = 0
     }
 
-    Phaser.Actions.IncX(this.obstacles.getChildren(), -this.gameSpeed)
+    Phaser.Actions.IncX(this.obstacles.getChildren(), -this.gameSpeed * this.gameSpeedModifier)
     Phaser.Actions.IncX(this.clouds.getChildren(), -0.5)
+
+    const score = Array.from(String(this.score), Number);
+
+    for(let i = 0; i < 5 - String(this.score).length; i++){
+      score.unshift(0)
+    }
+
+    this.scoreText.setText(score.join(''))
 
     this.obstacles.getChildren().forEach((obstacle: SpriteWithDynamicBody) => {
       if (obstacle.getBounds().right < 0) {
@@ -62,7 +81,7 @@ class PlayScene extends GameScene {
       }
     })
 
-    this.ground.tilePositionX += this.gameSpeed
+    this.ground.tilePositionX += (this.gameSpeed * this.gameSpeedModifier)
   }
 
   createEnvironment() {
@@ -198,6 +217,8 @@ class PlayScene extends GameScene {
       this.gameOverContainer.setAlpha(1)
 
       this.spawnTime = 0
+      this.score = 0
+      this.scoreDeltaTime = 0
       this.gameSpeed = 9
     })
   }
