@@ -12,6 +12,7 @@ class PlayScene extends GameScene {
   clouds: Phaser.GameObjects.Group;
   startTrigger: SpriteWithDynamicBody;
 
+  highScoreText: Phaser.GameObjects.Text;
   scoreText: Phaser.GameObjects.Text;
   gameOverContainer: Phaser.GameObjects.Container;
   gameOverText: Phaser.GameObjects.Image;
@@ -140,6 +141,17 @@ class PlayScene extends GameScene {
     })
       .setOrigin(1, 0)
       .setAlpha(0)
+
+    this.highScoreText = this.add.text(0, 0, '00000', {
+      fontSize: 30,
+      fontFamily: 'Arial',
+      color: '#535353',
+      resolution: 5
+    })
+      .setOrigin(1, 0)
+      .setAlpha(0)
+
+      this.highScoreText.x = this.scoreText.getBounds().left - 20
   }
 
   spawnObstacle() {
