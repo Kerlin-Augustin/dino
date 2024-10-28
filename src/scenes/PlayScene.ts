@@ -88,7 +88,7 @@ class PlayScene extends GameScene {
       }
     })
 
-    this.obstacles.getChildren().forEach((cloud: SpriteWithDynamicBody) => {
+    this.clouds.getChildren().forEach((cloud: SpriteWithDynamicBody) => {
       if (cloud.getBounds().right < 0) {
         cloud.x = this.gameWidth + 30
       }
