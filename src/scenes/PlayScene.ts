@@ -214,6 +214,7 @@ class PlayScene extends GameScene {
     this.restartText.on("pointerdown", () => {
       this.physics.resume();
       this.player.setVelocityY(0)
+      this.highScoreText.setAlpha(0)
 
       this.obstacles.clear(true, true);
       this.gameOverContainer.setAlpha(0);
@@ -231,6 +232,12 @@ class PlayScene extends GameScene {
 
       this.player.die();
       this.gameOverContainer.setAlpha(1)
+
+      const newHighScore = this.highScoreText.text.substring(this.highScoreText.text.length -5)
+      const newScore = Number(this.scoreText.text) > Number(newHighScore) ? this.scoreText.text : newHighScore
+
+      this.highScoreText.setText(`Hi ${newScore}`)
+      this.highScoreText.setAlpha(1)
 
       this.spawnTime = 0
       this.score = 0
